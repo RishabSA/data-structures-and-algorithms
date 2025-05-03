@@ -10,9 +10,6 @@ template <typename T> struct Node {
 template <typename T> class LinkedList {
 public:
   LinkedList() = default;
-  // LinkedList(T value){
-
-  // };
   ~LinkedList() {
     delete head;
     delete tail;

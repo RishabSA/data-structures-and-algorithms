@@ -3,6 +3,7 @@
 #include <queue>
 #include <random>
 #include <string>
+#include <algorithm>
 
 template <typename T> class Node {
 public:
@@ -279,6 +280,39 @@ public:
     }
   };
 
+  int FindMaxDepth() {
+    if (root == nullptr) {
+      return 0;
+    } else {
+      return FindMaxDepth(root);
+    }
+  };
+
+  int FindMaxDepth(Node<T>* currentNode) {
+    if (currentNode == nullptr) return 0;
+
+    return 1 + std::max(FindMaxDepth(currentNode->getLeft()), FindMaxDepth(currentNode->getRight()));
+  };
+
+  int FindMinDepth() {
+    if (root == nullptr) {
+      return 0;
+    } else {
+      return FindMinDepth(root);
+    }
+  };
+
+  int FindMinDepth(Node<T>* currentNode) {
+    if (currentNode == nullptr) return 0;
+    else if (currentNode->getLeft() == nullptr) {
+      return 1 + FindMinDepth(currentNode->getRight());
+    } else if (currentNode->getRight() == nullptr) {
+      return 1 + FindMinDepth(currentNode->getLeft());
+    } else {
+      return 1 + std::min(FindMinDepth(currentNode->getLeft()), FindMinDepth(currentNode->getRight()));
+    }
+  };
+
   // O(log(N))
   bool Remove(T value) {
     if (root == nullptr) {
@@ -405,10 +439,15 @@ int main() {
   std::cout << "The maximum node in the tree has a value of: "
             << maximumNode->getValue() << "\n";
 
-  // Tree Length
+  // Tree Length and Depth
   int treeLength = tree.getTreeLength();
-  std::cout << "The tree has " << treeLength << " items."
-            << "\n";
+  std::cout << "The tree has " << treeLength << " items." << "\n";
+
+  int maxTreeDepth = tree.FindMaxDepth();
+  std::cout << "The tree has a maximum depth of " << maxTreeDepth << "." << "\n";
+
+  int minTreeDepth = tree.FindMinDepth();
+  std::cout << "The tree has a minimum depth of " << minTreeDepth << "." << "\n";
 
   std::cout << "\n";
 
@@ -451,10 +490,15 @@ int main() {
     std::cout << "Failed to remove " << max + 5 << "\n";
   }
 
-  // Tree Length
+  // Tree Length and Depth
   treeLength = tree.getTreeLength();
-  std::cout << "The tree has " << treeLength << " items."
-            << "\n\n";
+  std::cout << "The tree has " << treeLength << " items." << "\n";
+
+  maxTreeDepth = tree.FindMaxDepth();
+  std::cout << "The tree has a maximum depth of " << maxTreeDepth << "." << "\n";
+
+  minTreeDepth = tree.FindMinDepth();
+  std::cout << "The tree has a minimum depth of " << minTreeDepth << "." << "\n\n";
 
   tree.PrintTree();
 
