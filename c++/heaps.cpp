@@ -3,18 +3,17 @@
 
 template <typename T> class Heap {
 public:
-    Heap(bool min) {
+    Heap() {
         // Get parent index: (index − 1) / 2
         // Get left child index: 2 * index + 1
         // Get right child index: 2 * index + 2
 
-        isMin = min;
         length = 0;
     };
 
-    int getLength() { return length; }
+    int getLength() { return length; };
 
-    std::vector<T> getHeap() { return heap; }
+    std::vector<T> getHeap() { return heap; };
     
     void PrintHeap() {
         std::cout << "Heap: ";
@@ -22,7 +21,7 @@ public:
             std::cout << x << " ";
         }
         std::cout << "\n";
-    }
+    };
 
     // O(log(n))
     void Add(T value) {
@@ -31,20 +30,14 @@ public:
         length++;
 
         // Resorting the heap is O(log(n))
-        isMin ? MinHeapify() : MaxHeapify();
-    }
-
-    void MinHeapify() {
-        int i = length - 1;
-        while ((i > 0) && (heap[i] < heap[(i - 1) / 2])) {
-            std::swap(heap[i], heap[(i - 1) / 2]);
-            i = (i - 1) / 2;
-        }
+        MinHeapify();
     };
 
-    void MaxHeapify() {
-        int i = length - 1;
-        while ((i > 0) && (heap[i] > heap[(i - 1) / 2])) {
+    void MinHeapify() {
+        int i = length - 1; // Start with last inserted element
+        // Starting at the lowest children in the heap, check if they are less than parents
+        while ((i > 0) && (heap[i] < heap[(i - 1) / 2])) {
+            // Swap with parent which moves it upwards
             std::swap(heap[i], heap[(i - 1) / 2]);
             i = (i - 1) / 2;
         }
@@ -57,49 +50,71 @@ public:
             index++;
         }
         return -1;
-    }
+    };
 
     bool Remove(T value) {
         int index = FindIndex(value);
         if (index < 0) return false;
 
-        // Move last element into slot and pop it
         heap[index] = heap.back();
         heap.pop_back();
-        length = heap.size();
+        length--;
 
-        // Restore heap property by sifting down
+        int i = index;
         while (true) {
-            int left  = 2 * index + 1;
-            int right = 2 * index + 2;
-            int swapIdx = index;
+            int left = 2 * i + 1;
+            int right = 2 * i + 2;
+            if (left >= length) break;  // No children
 
-            // pick the smaller (for min-heap) or larger (for max-heap) child
-            if (left  < length &&
-                ((isMin && heap[swapIdx] > heap[left]) ||
-                (!isMin && heap[swapIdx] < heap[left])))
-                swapIdx = left;
-            if (right < length &&
-                ((isMin && heap[swapIdx] > heap[right]) ||
-                (!isMin && heap[swapIdx] < heap[right])))
-                swapIdx = right;
+            // Get the smaller child
+            int smallest = left;
+            if (right < length && heap[right] < heap[left]) {
+                smallest = right;
+            }
 
-            if (swapIdx == index) break;
-            std::swap(heap[index], heap[swapIdx]);
-            index = swapIdx;
+            if (heap[i] <= heap[smallest]) break;
+
+            std::swap(heap[i], heap[smallest]);
+            i = smallest;
         }
+
         return true;
-    }
+    };
+
+    bool Contains(T value) {
+        int start = 0;
+        int nodes = 1;
+
+        while (start < length) {
+            start = nodes - 1;
+            int end = nodes + start;
+            int count = 0;
+
+            while (start < length && start < end) {
+                if (value == heap[start]) {
+                    return true;
+                } else if (value > heap[(start - 1) / 2] && value < heap[start]) {
+                    count++;
+                }
+                start++;
+            }
+
+            if (count == nodes) {
+                return false;
+            }
+            nodes *= 2;
+        }
+
+        return false;
+    };
 
 private:
     std::vector<T> heap;
     int length;
-    bool isMin;
 };
 
 int main() {
-    bool isMin = true;
-    Heap<int> heap(isMin);
+    Heap<int> heap;
 
     heap.Add(3);
     heap.Add(9);
@@ -124,6 +139,18 @@ int main() {
 
     std::cout << "The heap has " << heap.getLength() << " elements." << "\n";
     heap.PrintHeap();
+
+    if (heap.Contains(3)) {
+        std::cout << "The heap contains 3." << "\n";
+    } else {
+        std::cout << "The heap does not contain 3." << "\n";
+    }
+
+    if (heap.Contains(9)) {
+        std::cout << "The heap contains 9." << "\n";
+    } else {
+        std::cout << "The heap does not contain 9." << "\n";
+    }
 
     return 0;
 }
