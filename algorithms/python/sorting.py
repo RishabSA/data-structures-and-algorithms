@@ -35,7 +35,7 @@ def mergeSort(list):
 
     # Merge elements in sorted order
     while i < len(left) and j < len(right):
-        if left[i] < right[i]:
+        if left[i] < right[j]:
             merged.append(left[i])
             i += 1
         else:
@@ -88,6 +88,22 @@ def quickSort(list):
     return result
 
 
+def insertionSort(list):
+    unsorted = 1
+
+    while unsorted < len(list):
+        hold = list[unsorted]
+        i = unsorted - 1
+        while i >= 0 and hold < list[i]:
+            list[i + 1] = list[i]
+            i -= 1
+
+        list[i + 1] = hold
+        unsorted += 1
+
+    return list
+
+
 if __name__ == "__main__":
     minimum, maximum, size = -200, 200, 25
     random.seed()
@@ -108,7 +124,15 @@ if __name__ == "__main__":
     print(f"Quick Sorted Nums: {quickSortedNums}")
     print("\n")
 
-    if bubbleSortedNums == mergeSortedNums and mergeSortedNums == quickSortedNums:
+    insertionSortedNums = insertionSort(nums)
+    print(f"Insertion Sorted Nums: {insertionSortedNums}")
+    print("\n")
+
+    if (
+        bubbleSortedNums == mergeSortedNums
+        and mergeSortedNums == quickSortedNums
+        and quickSortedNums == insertionSortedNums
+    ):
         print("All sorting algorithms are correct!")
     else:
         print("One or more of the sorting algorithms are not correct.")

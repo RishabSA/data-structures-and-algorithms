@@ -98,6 +98,24 @@ std::vector<T> quickSort(std::vector<T> list) {
     return result;
 }
 
+// O(N^2)
+template<typename T>
+std::vector<T> insertionSort(std::vector<T> list) {
+    int unsorted = 1;
+
+    while (unsorted < list.size()) {
+        T hold = list[unsorted];
+        int i = unsorted - 1;
+        while (i >= 0 && hold < list[i]) {
+            list[i + 1] = list[i];
+            i--;
+        }
+        list[i + 1] = hold;
+        unsorted++;
+    }
+
+    return list;
+}
 
 int main() {
     // Define the range
@@ -140,6 +158,14 @@ int main() {
 
     std::cout << "Quick Sorted Nums: ";
     for (int num : quickSortedNums) {
+        std::cout << num << " ";
+    }
+    std::cout << "\n\n";
+
+    std::vector<int> insertionSortedNums = insertionSort(nums);
+
+    std::cout << "Insertion Sorted Nums: ";
+    for (int num : insertionSortedNums) {
         std::cout << num << " ";
     }
     std::cout << "\n\n";
