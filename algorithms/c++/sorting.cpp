@@ -3,10 +3,11 @@
 #include <random>
 
 // O(N^2)
-std::vector<int> bubbleSort(std::vector<int> list) {
+template<typename T>
+std::vector<T> bubbleSort(std::vector<T> list) {
     // Moves the larger elements to the back of the list
-    for (int i = 0; i < list.size() - 1; i++) {
-        for (int j = 0; j < list.size() - 1; j++) {
+    for (int i = 0; i < list.size(); i++) {
+        for (int j = 0; j < list.size(); j++) {
             if (list[i] < list[j]) {
                 std::swap(list[i], list[j]);
             }
@@ -17,7 +18,8 @@ std::vector<int> bubbleSort(std::vector<int> list) {
 }
 
 // O(N log(N))
-std::vector<int> mergeSort(std::vector<int> list) {
+template<typename T>
+std::vector<T> mergeSort(std::vector<T> list) {
     // Split a list into two similar sized lists (left and right), sort each list, and then merge the sorted lists together
 
     // Return if the list is already sorted
@@ -27,15 +29,15 @@ std::vector<int> mergeSort(std::vector<int> list) {
 
     // Split the list into two halves
     int middle = list.size() / 2;
-    std::vector<int> left(list.begin(), list.begin() + middle);
-    std::vector<int> right(list.begin() + middle, list.end());
+    std::vector<T> left(list.begin(), list.begin() + middle);
+    std::vector<T> right(list.begin() + middle, list.end());
 
     // Recursively call the mergeSort to get sorted list
     left = mergeSort(left);
     right = mergeSort(right);
 
     // Merge the left and right lists
-    std::vector<int> merged;
+    std::vector<T> merged;
     int i = 0, j = 0;
 
     // Merge elements in sorted order
@@ -52,6 +54,48 @@ std::vector<int> mergeSort(std::vector<int> list) {
     while (j < right.size()) merged.push_back(right[j++]);
 
     return merged;
+}
+
+// O(N log(N))
+template<typename T>
+std::vector<T> quickSort(std::vector<T> list) {
+    // Pick an item, called pivot, and move all smaller items before it and all greater items after it. 
+    // This is the main quick sort operation, called partition, which is recursively repeated on lesser and greater sub lists until their size is one or zero
+
+    // Return if the list is already sorted
+    if (list.size() <= 1) {
+        return list;
+    }
+
+    // Choose the middle element as the pivot
+    T pivot = list[list.size() / 2];
+
+    // Partition into less, equal and greater
+    std::vector<T> equal;
+    std::vector<T> less;
+    std::vector<T> greater;
+
+    for (int i = 0; i < list.size(); i++) {
+        if (list[i] == pivot) {
+            equal.push_back(list[i]);
+        } else if (list[i] < pivot) {
+            less.push_back(list[i]);
+        } else {
+            greater.push_back(list[i]);
+        }
+    }
+
+    // Recursively sort the partitions
+    less = quickSort(less);
+    greater = quickSort(greater);
+
+    // Concatenate the partitions
+    std::vector<T> result;
+    result.insert(result.end(), less.begin(), less.end());
+    result.insert(result.end(), equal.begin(), equal.end());
+    result.insert(result.end(), greater.begin(), greater.end());
+
+    return result;
 }
 
 
@@ -88,6 +132,14 @@ int main() {
 
     std::cout << "Merge Sorted Nums: ";
     for (int num : mergeSortedNums) {
+        std::cout << num << " ";
+    }
+    std::cout << "\n\n";
+
+    std::vector<int> quickSortedNums = quickSort(nums);
+
+    std::cout << "Quick Sorted Nums: ";
+    for (int num : quickSortedNums) {
         std::cout << num << " ";
     }
     std::cout << "\n\n";
