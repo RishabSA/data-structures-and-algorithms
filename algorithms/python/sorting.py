@@ -89,17 +89,53 @@ def quickSort(list):
 
 
 def insertionSort(list):
-    unsorted = 1
+    # Builds the sorted array one element at a time by repeatedly taking the next element and inserting it into its proper place among the previously sorted elements.
+
+    unsorted = 1  # Index of the next element to insert into the sorted portion
 
     while unsorted < len(list):
         hold = list[unsorted]
-        i = unsorted - 1
+        i = (
+            unsorted - 1
+        )  # Scans backward through the sorted portion to find the insertion point
+
         while i >= 0 and hold < list[i]:
-            list[i + 1] = list[i]
+            list[i + 1] = list[i]  # Move the larger element to the right
             i -= 1
 
+        # Insert the held value into its correct position
         list[i + 1] = hold
         unsorted += 1
+
+    return list
+
+
+def shellSort(list):
+    # Improves upon insertion sort by initially sorting elements far apart and progressively reducing the gap between compared items, allowing early movement of out-of-place entries.
+
+    increment = len(list) // 2
+
+    while increment != 0:
+        current = increment
+
+        # Reduce the gap until it reaches 0, which ends the sort
+        while current < len(list):
+            hold = list[current]
+            i = (
+                current - increment
+            )  # Scans backward through the sorted portion to find the insertion point
+
+            while i >= 0 and hold < list[i]:
+                list[i + increment] = list[
+                    i
+                ]  # Move the larger element to the gapped right
+                i -= increment
+
+            # Insert the held value into its correct gapped position
+            list[i + increment] = hold
+            current += 1
+
+        increment //= 2
 
     return list
 
@@ -128,10 +164,15 @@ if __name__ == "__main__":
     print(f"Insertion Sorted Nums: {insertionSortedNums}")
     print("\n")
 
+    shellSortedNums = shellSort(nums)
+    print(f"Shell Sorted Nums: {shellSortedNums}")
+    print("\n")
+
     if (
         bubbleSortedNums == mergeSortedNums
         and mergeSortedNums == quickSortedNums
         and quickSortedNums == insertionSortedNums
+        and insertionSortedNums == shellSortedNums
     ):
         print("All sorting algorithms are correct!")
     else:

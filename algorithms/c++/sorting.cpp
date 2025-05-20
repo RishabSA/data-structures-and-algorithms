@@ -101,17 +101,54 @@ std::vector<T> quickSort(std::vector<T> list) {
 // O(N^2)
 template<typename T>
 std::vector<T> insertionSort(std::vector<T> list) {
-    int unsorted = 1;
+    // Builds the sorted array one element at a time by repeatedly taking the next element and inserting it into its proper place among the previously sorted elements.
 
+    int unsorted = 1; // Index of the next element to insert into the sorted portion
+
+    // Loop until every element has been inserted
     while (unsorted < list.size()) {
         T hold = list[unsorted];
-        int i = unsorted - 1;
+        int i = unsorted - 1; // Scans backward through the sorted portion to find the insertion point
+
         while (i >= 0 && hold < list[i]) {
-            list[i + 1] = list[i];
+            list[i + 1] = list[i]; // Move the larger element to the right
             i--;
         }
+
+        // Insert the held value into its correct position
         list[i + 1] = hold;
         unsorted++;
+    }
+
+    return list;
+}
+
+// O(N log²(N))
+template<typename T>
+std::vector<T> shellSort(std::vector<T> list) {
+    // Improves upon insertion sort by initially sorting elements far apart and progressively reducing the gap between compared items, allowing early movement of out-of-place entries.
+
+    int increment = list.size() / 2;
+
+    while (increment != 0) {
+        int current = increment;
+
+        // Reduce the gap until it reaches 0, which ends the sort
+        while (current < list.size()) {
+            T hold = list[current];
+            int i = current - increment; // Scans backward through the sorted portion to find the insertion point
+
+            while (i >= 0 && hold < list[i]) {
+                list[i + increment] = list[i]; // Move the larger element to the gapped right
+                i -= increment;
+            }
+
+            // Insert the held value into its correct gapped position
+            list[i + increment] = hold;
+            current++;
+        }
+
+        increment /= 2; // Halve the gap for the next pass
     }
 
     return list;
@@ -166,6 +203,14 @@ int main() {
 
     std::cout << "Insertion Sorted Nums: ";
     for (int num : insertionSortedNums) {
+        std::cout << num << " ";
+    }
+    std::cout << "\n\n";
+
+    std::vector<int> shellSortedNums = shellSort(nums);
+
+    std::cout << "Shell Sorted Nums: ";
+    for (int num : shellSortedNums) {
         std::cout << num << " ";
     }
     std::cout << "\n\n";
