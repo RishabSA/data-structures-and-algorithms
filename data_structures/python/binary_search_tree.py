@@ -11,6 +11,14 @@ class Node:
 
 class BinarySearchTree:
     def __init__(self):
+        # Root node with value x
+        # Left subtree of contains nodes with values < x
+        # Right subtree contains nodes with values are ≥ x
+        # Subtree nodes follow the same rules
+
+        # During insertion, check if the new value is less than or greater than the root value
+        # Recursively go down the tree until the new node can be added at an empty location
+
         self.root = None
         self.count = 0
 
@@ -22,6 +30,7 @@ class BinarySearchTree:
 
         self.count += 1
 
+    # Recursively find the proper leaf node and insert the new node
     # O(log(N))
     def _InsertNode(self, currentNode, val):
         if val < currentNode.val:
@@ -38,6 +47,7 @@ class BinarySearchTree:
     def FindNode(self, val):
         return self._FindNode(self.root, val)
 
+    # Return the node that has the value
     # O(log(N))
     def _FindNode(self, currentNode, val):
         if currentNode == None:
@@ -51,6 +61,7 @@ class BinarySearchTree:
         else:
             return self._FindNode(currentNode.right, val)
 
+    # Return the parent of the node that has the value
     def FindParent(self, val):
         if self.root == None:
             return None
@@ -76,6 +87,7 @@ class BinarySearchTree:
             else:
                 return self._FindParent(currentNode.right, val)
 
+    # Delete the node with value and re-order the tree
     # (O(log(N)))
     def Remove(self, val):
         if self.root == None:
@@ -122,6 +134,7 @@ class BinarySearchTree:
         self.count -= 1
         return True
 
+    # PreOrder Traversal
     # O(N)
     def PreOrder(self, currentNode):
         treeList = []
@@ -137,6 +150,7 @@ class BinarySearchTree:
         treeList = self.PreOrder(self.root)
         print(f"Pre Order Printed Tree: {treeList}")
 
+    # PostOrder Traversal
     # O(N)
     def PostOrder(self, currentNode):
         treeList = []
@@ -152,6 +166,7 @@ class BinarySearchTree:
         treeList = self.PostOrder(self.root)
         print(f"Post Order Printed Tree: {treeList}")
 
+    # InOrder Traversal
     # O(N)
     def InOrder(self, currentNode):
         treeList = []
@@ -167,6 +182,8 @@ class BinarySearchTree:
         treeList = self.InOrder(self.root)
         print(f"In Order Printed Tree: {treeList}")
 
+    # Breadth First Search
+    # O(N)
     def BreadthFirst(self):
         if self.root != None:
             treeList = []
@@ -249,7 +266,7 @@ class BinarySearchTree:
 
 
 if __name__ == "__main__":
-    bst = BinarySearchTree()
+    tree = BinarySearchTree()
 
     minimum, maximum, size = -100, 100, 10
     random.seed()
@@ -257,56 +274,56 @@ if __name__ == "__main__":
     print(f"Inserted Nums: {insertedNums}")
 
     for num in insertedNums:
-        bst.Insert(num)
+        tree.Insert(num)
 
     print("\n")
 
-    bst.PrintPreOrderTree()
-    bst.PrintPostOrderTree()
-    bst.PrintInOrderTree()
-    bst.PrintBreadthFirst()
+    tree.PrintPreOrderTree()
+    tree.PrintPostOrderTree()
+    tree.PrintInOrderTree()
+    tree.PrintBreadthFirst()
 
     print("\n")
 
-    print(f"The Min Value of the BST is: {bst.MinVal()}")
-    print(f"The Max Value of the BST is: {bst.MaxVal()}")
+    print(f"The Min Value of the tree is: {tree.MinVal()}")
+    print(f"The Max Value of the tree is: {tree.MaxVal()}")
 
     print("\n")
 
-    print(f"The Min Depth of the BST is: {bst.MinDepth()}")
-    print(f"The Max Depth of the BST is: {bst.MaxDepth()}")
+    print(f"The Min Depth of the tree is: {tree.MinDepth()}")
+    print(f"The Max Depth of the tree is: {tree.MaxDepth()}")
 
-    bstNode5 = bst.FindNode(insertedNums[4])
-    print(f"Found Node val: {bstNode5.val if bstNode5 else bstNode5}")
+    treeNode5 = tree.FindNode(insertedNums[4])
+    print(f"Found Node val: {treeNode5.val if treeNode5 else treeNode5}")
 
-    bstNode2 = bst.FindNode(insertedNums[1])
-    print(f"Found Node val: {bstNode2.val if bstNode2 else bstNode2}")
+    treeNode2 = tree.FindNode(insertedNums[1])
+    print(f"Found Node val: {treeNode2.val if treeNode2 else treeNode2}")
 
-    bstNodeNone = bst.FindNode(200)
-    print(f"Found Node val: {bstNodeNone.val if bstNodeNone else bstNodeNone}")
+    treeNodeNone = tree.FindNode(200)
+    print(f"Found Node val: {treeNodeNone.val if treeNodeNone else treeNodeNone}")
 
     print("\n")
 
     parentVals = []
 
     for num in insertedNums:
-        parentNode = bst.FindParent(num)
+        parentNode = tree.FindParent(num)
         parentVals.append((num, parentNode.val if parentNode else parentNode))
 
     print(f"Parents of Inserted Nodes: {parentVals}")
 
     print("\n")
-    bst.PrintInOrderTree()
+    tree.PrintInOrderTree()
 
     print(
         f"Successfully removed {insertedNums[2]}"
-        if bst.Remove(insertedNums[2])
+        if tree.Remove(insertedNums[2])
         else f"Failed to remove {insertedNums[2]}"
     )
     print(
-        f"Successfully removed {103}" if bst.Remove(103) else f"Failed to remove {103}"
+        f"Successfully removed {103}" if tree.Remove(103) else f"Failed to remove {103}"
     )
 
-    bst.PrintInOrderTree()
+    tree.PrintInOrderTree()
 
     print("\n")
